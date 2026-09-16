@@ -1,14 +1,14 @@
 export const personalInfo = {
   name: "Shrishti Pandey",
-  title: "Frontend Developer & UI Craftsman",
-  tagline: "Building high-performance, responsive web applications with React.js, Tailwind CSS & modern interactive UI architectures.",
+  title: "Product Designer & Front End Developer",
+  tagline: "Product designer and front end developer with a passion for designing beautiful, accessible and functional user experiences.",
   phone: "+91 8828026903",
   email: "shrishtip028@gmail.com",
   linkedin: "https://linkedin.com/in/shrishtipandey0611",
   github: "https://github.com/shrishti630",
   location: "Mumbai, Maharashtra, India",
-  status: "Available for Frontend Developer Roles",
-  objective: "Frontend Developer with hands-on experience building responsive web applications using React.js, JavaScript, HTML, and CSS. Experienced in developing reusable UI components, integrating APIs, and creating accessible user interfaces through internship and commercial projects."
+  status: "Available for Roles & Projects",
+  objective: "Product designer and front end developer with hands-on experience building responsive web applications using React.js, Tailwind CSS, JavaScript, and modern UI design systems. Experienced in developing reusable UI components, integrating APIs, and creating accessible user interfaces through internship and commercial projects."
 };
 
 export const aestheticReferences = [
@@ -109,6 +109,8 @@ export const projects = [
     title: "Finance Analytics Dashboard",
     date: "Apr 2026",
     category: "React / Frontend",
+    type: "Dashboard & Design System",
+    image: "/projects/finance-dashboard.jpg",
     description: "Comprehensive financial dashboard built using React.js for tracking and visualizing real-time financial metrics, balance trends, and expense distributions.",
     highlights: [
       "Interactive data charts and visual financial indicators",
@@ -117,7 +119,7 @@ export const projects = [
     ],
     tech: ["React.js", "JavaScript", "Tailwind CSS", "Chart.js/Recharts"],
     githubUrl: "https://github.com/shrishti630/finance-dashboard",
-    demoUrl: "#",
+    demoUrl: "https://github.com/shrishti630/finance-dashboard",
     featured: true
   },
   {
@@ -125,15 +127,17 @@ export const projects = [
     title: "Movie Xplore - TMDB Media Platform",
     date: "Jan 2026",
     category: "JavaScript / API",
+    type: "REST API & Streaming UI",
+    image: "/projects/movie-xplore.jpg",
     description: "Movie and TV discovery platform built using JavaScript, Tailwind CSS, and TMDB REST APIs for fetching, searching, and displaying trending media details.",
     highlights: [
       "Dynamic REST API integration with TMDB endpoints",
       "Live search with debounced queries and category filtering",
-      "Sleek glassmorphism media cards with detailed modal overlays"
+      "Sleek media cards with detailed modal overlays"
     ],
     tech: ["JavaScript (ES6+)", "Tailwind CSS", "TMDB API", "HTML5"],
     githubUrl: "https://github.com/shrishti630/movie-xplore",
-    demoUrl: "#",
+    demoUrl: "https://github.com/shrishti630/movie-xplore",
     featured: true
   },
   {
@@ -141,6 +145,8 @@ export const projects = [
     title: "3D Virtual Try-On System",
     date: "May 2025",
     category: "AI / 3D Web",
+    type: "Research Paper & 3D Web UI",
+    image: "/projects/virtual-tryon.jpg",
     description: "Virtual clothing try-on system designed to visualize garment fitting using 3D mannequin models generated from user body measurements. Co-authored research paper.",
     highlights: [
       "Co-authored published academic research paper on 3D Virtual Try-On",
@@ -149,30 +155,16 @@ export const projects = [
     ],
     tech: ["React.js", "Python / 3D Graphics", "Body Measurement Algorithms"],
     githubUrl: "https://github.com/shrishti630/3d-virtual-tryon",
-    demoUrl: "#",
+    demoUrl: "https://github.com/shrishti630/3d-virtual-tryon",
     featured: true
-  },
-  {
-    id: "face-music",
-    title: "Face Recognition Music Recommender",
-    date: "Apr 2024",
-    category: "AI / Web",
-    description: "Intelligent music recommendation system that detects user facial emotions via computer vision and suggests tailored song playlists in real time.",
-    highlights: [
-      "Real-time facial emotion recognition pipeline",
-      "Automated mood-to-genre mapping logic",
-      "Interactive media player and playlist stream UI"
-    ],
-    tech: ["Python", "OpenCV", "JavaScript", "Web Speech / Emotion API"],
-    githubUrl: "https://github.com/shrishti630/face-music-recommender",
-    demoUrl: "#",
-    featured: false
   },
   {
     id: "road-monitoring",
     title: "Aerial Road Construction Monitoring",
     date: "Sep 2024 - Dec 2024",
     category: "SIH 2024 Grand Finalist",
+    type: "SIH 2024 Finalist & GIS AI",
+    image: "/projects/aerial-road.jpg",
     description: "Smart India Hackathon 2024 Grand Finalist Project. Automated system for monitoring road construction progress using drone imagery, geotagged data, and AI analysis.",
     highlights: [
       "Grand Finalist at Smart India Hackathon (SIH 2024)",
@@ -181,8 +173,44 @@ export const projects = [
     ],
     tech: ["Python", "Streamlit", "AI Vision", "Drone Geotagging", "GIS"],
     githubUrl: "https://github.com/shrishti630/aerial-road-monitoring",
-    demoUrl: "#",
+    demoUrl: "https://github.com/shrishti630/aerial-road-monitoring",
     featured: true
+  },
+  {
+    id: "aivot-ngo",
+    title: "NGO Web Platform & Marathi Localization",
+    date: "Apr 2026",
+    category: "React / Frontend",
+    type: "NGO Community Platform",
+    image: "/projects/aivot-ngo.jpg",
+    description: "Accessible NGO community platform engineered at AIVOT AI featuring responsive layouts, reusable UI components, and complete Marathi language localization for broader community reach.",
+    highlights: [
+      "Full dual-language Marathi and English localization toggle",
+      "Modular card design system and accessible typography",
+      "Developed interactive donor and initiative tracking views"
+    ],
+    tech: ["React.js", "Vite", "Tailwind CSS", "i18n Localization"],
+    githubUrl: "https://github.com/shrishti630",
+    demoUrl: "https://github.com/shrishti630",
+    featured: true
+  },
+  {
+    id: "face-music",
+    title: "Face Recognition Music Recommender",
+    date: "Apr 2024",
+    category: "AI / Web",
+    type: "Computer Vision & Music AI",
+    image: "/projects/face-music.jpg",
+    description: "Intelligent music recommendation system that detects user facial emotions via computer vision and suggests tailored song playlists in real time.",
+    highlights: [
+      "Real-time facial emotion recognition pipeline",
+      "Automated mood-to-genre mapping logic",
+      "Interactive media player and playlist stream UI"
+    ],
+    tech: ["Python", "OpenCV", "JavaScript", "Web Speech / Emotion API"],
+    githubUrl: "https://github.com/shrishti630/face-music-recommender",
+    demoUrl: "https://github.com/shrishti630/face-music-recommender",
+    featured: false
   }
 ];
 

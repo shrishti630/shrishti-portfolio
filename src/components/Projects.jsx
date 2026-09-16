@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  FolderGit2, 
-  Calendar, 
-  ArrowUpRight, 
-  X,
-  Sparkles
+  ArrowRight, 
+  ExternalLink, 
+  X, 
+  CheckCircle2, 
+  Calendar 
 } from 'lucide-react';
 import { GithubIcon } from './BrandIcons';
 import { projects } from '../data/resumeData';
@@ -15,273 +15,236 @@ export default function Projects() {
   const [selectedProject, setSelectedProject] = useState(null);
 
   const filters = [
-    { id: 'all', label: 'All Projects' },
+    { id: 'all', label: 'All Work' },
     { id: 'featured', label: '⭐ Featured' },
-    { id: 'sih', label: '🏆 SIH Hackathon' },
-    { id: 'react', label: 'React / Frontend' }
+    { id: 'react', label: 'React / Frontend' },
+    { id: 'ai', label: 'AI & 3D Web' },
+    { id: 'sih', label: 'SIH Hackathon' }
   ];
 
-  const filteredProjects = projects.filter(p => {
+  const filteredProjects = projects.filter((p) => {
     if (activeFilter === 'featured') return p.featured;
-    if (activeFilter === 'sih') return p.category.includes('SIH');
     if (activeFilter === 'react') return p.tech.some(t => t.toLowerCase().includes('react'));
+    if (activeFilter === 'ai') return p.category.includes('AI') || p.id === 'virtual-tryon';
+    if (activeFilter === 'sih') return p.category.includes('SIH');
     return true;
   });
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.5, ease: "easeOut" } 
-    }
-  };
-
   return (
-    <section id="projects" className="py-20 relative bg-slate-50 overflow-hidden">
+    <section id="projects" className="dark-section py-20 md:py-28 bg-[#16181b] relative overflow-hidden text-slate-200">
       
-      {/* Background Mesh Accent */}
-      <div className="absolute top-1/4 right-10 w-96 h-96 bg-indigo-500/5 rounded-full blur-[130px] pointer-events-none"></div>
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:28px_28px]"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center space-y-3 max-w-2xl mx-auto mb-12"
-        >
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-xs font-mono text-indigo-700 font-semibold shadow-xs">
-            <FolderGit2 className="w-3.5 h-3.5" />
-            <span>// CODE IN PRODUCTION</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 font-['Plus_Jakarta_Sans']">
-            Featured Projects & Innovations
-          </h2>
-          <p className="text-sm text-slate-600">
-            From National Hackathon finalists to AI 3D virtual try-ons and real-time TMDB web applications.
-          </p>
-        </motion.div>
+        {/* Adham Dannaway Signature Centered Section Header */}
+        <div className="header-center">
+          <h3>Some of my latest work</h3>
+        </div>
 
         {/* Filter Tabs */}
-        <motion.div 
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex flex-wrap items-center justify-center gap-2 mb-10"
-        >
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
           {filters.map((f) => (
-            <motion.button
+            <button
               key={f.id}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
               onClick={() => setActiveFilter(f.id)}
-              className={`px-4 py-2 rounded-xl text-xs font-mono transition-all cursor-pointer ${
+              className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
                 activeFilter === f.id
-                  ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-600/20'
-                  : 'bg-white text-slate-600 hover:text-indigo-600 border border-slate-200 shadow-xs'
+                  ? 'bg-white text-slate-900 font-semibold shadow-md'
+                  : 'bg-[#22262d] text-slate-400 hover:text-white hover:bg-[#2c313a] border border-[#2f3540]'
               }`}
             >
               {f.label}
-            </motion.button>
+            </button>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Projects Grid with Staggered Reveals */}
-        <AnimatePresence mode="wait">
-          <motion.div 
-            key={activeFilter}
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {filteredProjects.map((project) => (
-              <motion.div 
+        {/* Adham Dannaway .thumbs Project Grid */}
+        <motion.div 
+          layout
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          <AnimatePresence>
+            {filteredProjects.map((project, idx) => (
+              <motion.div
                 key={project.id}
-                variants={itemVariants}
-                whileHover={{ y: -8, scale: 1.02 }}
-                transition={{ duration: 0.25 }}
-                className="bg-white rounded-2xl p-6 border border-slate-200 flex flex-col justify-between shadow-xs hover:shadow-xl hover:shadow-indigo-500/10 hover:border-indigo-300 group relative overflow-hidden transition-all"
+                layout
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.4, delay: idx * 0.05 }}
+                className="thumb-card group cursor-pointer flex flex-col"
+                onClick={() => setSelectedProject(project)}
               >
-                {/* Subtle top indigo glow line */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-                <div className="space-y-4">
-                  
-                  {/* Header Category & Date */}
-                  <div className="flex items-center justify-between">
-                    <span className="px-2.5 py-0.5 rounded-full bg-purple-50 border border-purple-200 text-[10px] font-mono text-purple-700 font-bold">
-                      {project.category}
+                {/* Project Thumbnail Image with Subtle Zoom */}
+                <div className="relative aspect-[16/10] overflow-hidden bg-slate-800 p-2 sm:p-2.5 pb-0">
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    className="w-full h-full object-cover rounded-t-xl transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                    loading="lazy"
+                  />
+                  {project.featured && (
+                    <span className="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md text-amber-300 text-[10px] font-mono px-2 py-0.5 rounded-md border border-amber-400/30">
+                      ★ Featured
                     </span>
-                    <span className="text-[11px] font-mono text-slate-400 flex items-center gap-1 font-medium">
-                      <Calendar className="w-3 h-3" />
-                      {project.date}
-                    </span>
-                  </div>
-
-                  {/* Project Title */}
-                  <h3 className="text-lg font-bold text-slate-900 font-['Plus_Jakarta_Sans'] group-hover:text-indigo-600 transition-colors">
-                    {project.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">
-                    {project.description}
-                  </p>
-
-                  {/* Key Highlights List */}
-                  <ul className="space-y-1.5 pt-2 border-t border-slate-100">
-                    {project.highlights.slice(0, 2).map((item, i) => (
-                      <li key={i} className="text-[11px] text-slate-700 flex items-start gap-1.5 font-medium">
-                        <span className="text-indigo-600 font-mono">•</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-
+                  )}
                 </div>
 
-                {/* Card Footer: Tech Chips & Actions */}
-                <div className="pt-5 mt-4 border-t border-slate-100 space-y-3">
-                  <div className="flex flex-wrap gap-1">
-                    {project.tech.map((t, idx) => (
-                      <span 
-                        key={idx}
-                        className="px-2 py-0.5 rounded bg-slate-100 text-[10px] font-mono text-slate-700 border border-slate-200/80 font-medium"
-                      >
-                        {t}
-                      </span>
-                    ))}
+                {/* Card Description & Adham Dannaway Arrow Right (.arrow-r) */}
+                <div className="p-5 flex items-center justify-between gap-4 flex-1">
+                  <div className="space-y-1 min-w-0">
+                    <h4 className="text-base sm:text-lg font-bold text-slate-100 group-hover:text-indigo-400 transition-colors truncate">
+                      {project.title}
+                    </h4>
+                    <p className="text-xs sm:text-sm text-slate-400 truncate">
+                      {project.type || project.category}
+                    </p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-1">
-                    <motion.button
-                      whileHover={{ x: 2 }}
-                      onClick={() => setSelectedProject(project)}
-                      className="text-xs font-mono text-indigo-600 hover:text-indigo-700 font-semibold flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>View Details</span>
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    </motion.button>
-
-                    <div className="flex items-center gap-2">
-                      <motion.a
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="p-2 rounded-lg bg-slate-100 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 border border-slate-200 transition-colors"
-                        title="View GitHub Source"
-                      >
-                        <GithubIcon className="w-4 h-4" />
-                      </motion.a>
-                    </div>
+                  {/* Arrow Indicator Button */}
+                  <div className="arrow-r-btn shrink-0">
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                   </div>
                 </div>
 
               </motion.div>
             ))}
-          </motion.div>
-        </AnimatePresence>
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Bottom CTA to GitHub */}
+        <div className="mt-14 text-center">
+          <a
+            href="https://github.com/shrishti630"
+            target="_blank"
+            rel="noreferrer"
+            className="btn-adham btn-adham-secondary text-xs inline-flex items-center gap-2"
+          >
+            <GithubIcon className="w-4 h-4" />
+            <span>See more repositories on GitHub</span>
+          </a>
+        </div>
 
       </div>
 
-      {/* Detail Modal */}
+      {/* Project Detail Modal Overlay */}
       <AnimatePresence>
         {selectedProject && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4"
-          >
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            {/* Backdrop */}
             <motion.div 
-              initial={{ scale: 0.95, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 20 }}
-              className="bg-white max-w-2xl w-full rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-2xl relative space-y-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedProject(null)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-md"
+            ></motion.div>
+
+            {/* Modal Card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-3xl bg-[#1b1e24] border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden z-10 my-8 text-slate-200"
             >
-              
-              <button
+              {/* Close Button */}
+              <button 
                 onClick={() => setSelectedProject(null)}
-                className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 rounded-lg bg-slate-100 border border-slate-200 cursor-pointer"
+                className="absolute top-4 right-4 z-20 p-2 rounded-full bg-slate-900/80 text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="space-y-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-200 text-xs font-mono text-indigo-700 font-semibold">
-                  {selectedProject.category} • {selectedProject.date}
-                </span>
-                <h3 className="text-2xl font-bold text-slate-900 font-['Plus_Jakarta_Sans']">
-                  {selectedProject.title}
-                </h3>
+              {/* Modal Banner Image */}
+              <div className="relative aspect-[16/9] w-full bg-slate-900">
+                <img 
+                  src={selectedProject.image} 
+                  alt={selectedProject.title}
+                  className="w-full h-full object-cover"
+                />
               </div>
 
-              <p className="text-sm text-slate-600 leading-relaxed">
-                {selectedProject.description}
-              </p>
-
-              <div className="space-y-2">
-                <h4 className="text-xs font-mono text-indigo-600 font-semibold uppercase tracking-wider">Key Highlights & Architecture:</h4>
-                <ul className="space-y-2">
-                  {selectedProject.highlights.map((h, idx) => (
-                    <li key={idx} className="text-xs text-slate-700 flex items-start gap-2">
-                      <Sparkles className="w-3.5 h-3.5 text-indigo-600 shrink-0 mt-0.5" />
-                      <span>{h}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="space-y-2">
-                <h4 className="text-xs font-mono text-slate-400 font-semibold uppercase tracking-wider">Technology Stack:</h4>
-                <div className="flex flex-wrap gap-1.5">
-                  {selectedProject.tech.map((t, idx) => (
-                    <span key={idx} className="px-3 py-1 rounded-lg bg-slate-100 border border-slate-200 text-xs font-mono text-indigo-700 font-medium">
-                      {t}
+              {/* Modal Body */}
+              <div className="p-6 sm:p-8 space-y-6 max-h-[60vh] overflow-y-auto">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-mono px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                      {selectedProject.category}
                     </span>
-                  ))}
+                    <span className="text-xs font-mono text-slate-400 flex items-center gap-1">
+                      <Calendar className="w-3.5 h-3.5" />
+                      {selectedProject.date}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
+                    {selectedProject.title}
+                  </h3>
+                  <p className="text-sm text-slate-300 leading-relaxed">
+                    {selectedProject.description}
+                  </p>
                 </div>
-              </div>
 
-              <div className="pt-4 border-t border-slate-100 flex items-center gap-3">
-                <a
-                  href={selectedProject.githubUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="cyber-btn-secondary px-5 py-2.5 rounded-xl text-xs font-mono flex items-center gap-2"
-                >
-                  <GithubIcon className="w-4 h-4" />
-                  <span>Source Repository</span>
-                </a>
-                <button
-                  onClick={() => setSelectedProject(null)}
-                  className="px-5 py-2.5 rounded-xl text-xs font-mono text-slate-600 hover:text-slate-900 bg-slate-100 cursor-pointer"
-                >
-                  Close Window
-                </button>
+                {/* Key Architectural Highlights */}
+                <div className="space-y-3 pt-2">
+                  <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">
+                    Key Features &amp; Implementation
+                  </h4>
+                  <div className="space-y-2">
+                    {selectedProject.highlights.map((h, i) => (
+                      <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-300">
+                        <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                        <span>{h}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tech Stack Pills */}
+                <div className="space-y-2">
+                  <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">
+                    Technologies Used
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.tech.map((t) => (
+                      <span key={t} className="px-3 py-1 rounded-lg bg-[#272c35] text-xs font-mono text-indigo-300 border border-slate-700">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Links */}
+                <div className="pt-4 flex flex-wrap items-center gap-4 border-t border-slate-800">
+                  {selectedProject.githubUrl && (
+                    <a 
+                      href={selectedProject.githubUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn-adham btn-adham-secondary text-xs flex items-center gap-2"
+                    >
+                      <GithubIcon className="w-4 h-4" />
+                      <span>View Code on GitHub</span>
+                    </a>
+                  )}
+                  {selectedProject.demoUrl && selectedProject.demoUrl !== '#' && (
+                    <a 
+                      href={selectedProject.demoUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn-adham btn-adham-accent text-xs flex items-center gap-2"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      <span>Explore Repository</span>
+                    </a>
+                  )}
+                </div>
+
               </div>
 
             </motion.div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
 

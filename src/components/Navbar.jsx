@@ -1,159 +1,205 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Sparkles, Menu, X } from 'lucide-react';
+import { Download, Menu, X, Mail, Check, Sparkles } from 'lucide-react';
+import { GithubIcon, LinkedinIcon } from './BrandIcons';
 import { personalInfo } from '../data/resumeData';
 
 export default function Navbar({ onOpenAestheticModal }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 25);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const copyEmail = (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(personalInfo.email);
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2500);
+  };
+
   const navLinks = [
-    { name: 'About', href: '#hero' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Education', href: '#education' },
-    { name: 'Contact', href: '#contact' }
+    { name: 'about', href: '#about' },
+    { name: 'skills', href: '#skills' },
+    { name: 'portfolio', href: '#projects' },
+    { name: 'experience', href: '#experience' },
+    { name: 'contact', href: '#contact' }
   ];
 
   return (
-    <motion.header 
-      initial={{ y: -60, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+    <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled 
-          ? 'bg-white/85 backdrop-blur-xl border-b border-slate-200/90 py-3 shadow-sm shadow-slate-900/5' 
-          : 'bg-transparent py-5'
+          ? 'bg-white/95 backdrop-blur-md border-b border-slate-200/80 py-3 shadow-xs' 
+          : 'bg-white/80 backdrop-blur-xs py-5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Logo / Monogram */}
-          <motion.a 
+          {/* Adham Dannaway Signature Clean Logo */}
+          <a 
             href="#hero" 
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center gap-3 group"
+            className="flex items-center gap-2 text-slate-900 hover:text-indigo-600 transition-colors group"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-sky-400 p-[1px] shadow-sm">
-              <div className="w-full h-full bg-white rounded-[11px] flex items-center justify-center">
-                <span className="font-['Plus_Jakarta_Sans'] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-sky-600 text-lg">
-                  SP
-                </span>
-              </div>
-            </div>
-            <div>
-              <span className="font-['Plus_Jakarta_Sans'] font-bold text-slate-900 text-base tracking-tight block group-hover:text-indigo-600 transition-colors">
-                Shrishti Pandey
-              </span>
-              <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block -mt-1">
-                Frontend Dev
-              </span>
-            </div>
-          </motion.a>
+            <span className="font-['Plus_Jakarta_Sans'] font-extrabold text-xl sm:text-2xl tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
+              {personalInfo.name}
+            </span>
+          </a>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-1 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full border border-slate-200 shadow-sm">
-            {navLinks.map((link) => (
-              <motion.a
-                key={link.name}
-                href={link.href}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-3.5 py-1.5 text-xs font-medium text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all duration-200"
+          {/* Desktop Lowercase Navigation (Adham Dannaway style) */}
+          <nav className="hidden md:flex items-center gap-6">
+            <ul className="flex items-center gap-6 list-none m-0 p-0">
+              {navLinks.map((link) => (
+                <li key={link.name}>
+                  <a
+                    href={link.href}
+                    className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors lowercase tracking-wide"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            {/* Social Icons Right Beside Nav */}
+            <div className="flex items-center gap-2 pl-4 border-l border-slate-200">
+              <a
+                href={personalInfo.github}
+                target="_blank"
+                rel="noreferrer"
+                className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                title="GitHub"
               >
-                {link.name}
-              </motion.a>
-            ))}
+                <GithubIcon className="w-4 h-4" />
+              </a>
+
+              <a
+                href={personalInfo.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                title="LinkedIn"
+              >
+                <LinkedinIcon className="w-4 h-4" />
+              </a>
+
+              {/* Adham Dannaway Click to copy email in Navbar */}
+              <button
+                onClick={copyEmail}
+                className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer relative group"
+                title="Click to copy my email address to your clipboard 😀"
+              >
+                {copiedEmail ? <Check className="w-4 h-4 text-emerald-600" /> : <Mail className="w-4 h-4" />}
+                <span className="absolute -bottom-8 right-0 bg-slate-900 text-white text-[10px] font-mono px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                  {copiedEmail ? 'Copied!' : 'Copy email'}
+                </span>
+              </button>
+            </div>
+
+            {/* Design System & Resume Buttons */}
+            <div className="flex items-center gap-2">
+              {onOpenAestheticModal && (
+                <button
+                  onClick={onOpenAestheticModal}
+                  className="px-3 py-1.5 rounded-lg text-xs font-mono text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/80 transition-colors cursor-pointer flex items-center gap-1.5"
+                  title="View Design Tokens & Reference Sites"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Tokens</span>
+                </button>
+              )}
+
+              <a
+                href={`mailto:${personalInfo.email}?subject=Resume%20Request%20-%20Shrishti%20Pandey`}
+                className="btn-adham btn-adham-primary text-xs py-2 px-3.5"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Resume</span>
+              </a>
+            </div>
           </nav>
 
-          {/* Action CTAs */}
-          <div className="hidden lg:flex items-center gap-3">
-            <motion.button
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={onOpenAestheticModal}
-              className="flex items-center gap-2 px-3.5 py-2 text-xs font-mono text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100/80 border border-indigo-200/80 rounded-lg transition-all shadow-xs cursor-pointer"
-              title="View Design System & Aesthetic Inspiration"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-              <span>Design Tokens</span>
-            </motion.button>
-
-            <motion.a
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              href={`mailto:${personalInfo.email}?subject=Portfolio%20Inquiry%20-%20Shrishti%20Pandey`}
-              className="cyber-btn-primary flex items-center gap-2 px-4 py-2 rounded-lg text-xs tracking-wide shadow-md"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Get Resume</span>
-            </motion.a>
-          </div>
-
-          {/* Mobile Menu Trigger */}
+          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-2">
             <button
-              onClick={onOpenAestheticModal}
-              className="p-2 text-indigo-600 bg-white border border-slate-200 rounded-lg shadow-xs"
+              onClick={copyEmail}
+              className="p-2 text-slate-700 bg-white border border-slate-200 rounded-lg"
+              title="Copy Email"
             >
-              <Sparkles className="w-4 h-4" />
+              {copiedEmail ? <Check className="w-4 h-4 text-emerald-600" /> : <Mail className="w-4 h-4" />}
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-800 bg-white border border-slate-200 rounded-lg focus:outline-none shadow-xs"
+              className="p-2 text-slate-800 bg-white border border-slate-200 rounded-lg"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6 text-indigo-600" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 text-indigo-600" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
 
         </div>
-      </div>
 
-      {/* Mobile Menu Dropdown */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-white/95 backdrop-blur-2xl border-b border-slate-200 px-4 pt-3 pb-6 mt-2 shadow-lg"
-          >
-            <div className="flex flex-col gap-2">
-              {navLinks.map((link) => (
+        {/* Mobile Dropdown Drawer */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden pt-4 pb-6 border-t border-slate-100 mt-3 space-y-3"
+            >
+              <div className="flex flex-col space-y-2">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-3 py-2 text-sm font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-lg lowercase"
+                  >
+                    {link.name}
+                  </a>
+                ))}
+              </div>
+
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <a
+                    href={personalInfo.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 text-slate-600 border border-slate-200 rounded-lg"
+                  >
+                    <GithubIcon className="w-4 h-4" />
+                  </a>
+                  <a
+                    href={personalInfo.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 text-slate-600 border border-slate-200 rounded-lg"
+                  >
+                    <LinkedinIcon className="w-4 h-4" />
+                  </a>
+                </div>
+
                 <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                  href={`mailto:${personalInfo.email}?subject=Resume%20Request%20-%20Shrishti%20Pandey`}
+                  className="btn-adham btn-adham-primary text-xs py-2 px-3"
                 >
-                  {link.name}
-                </a>
-              ))}
-              <div className="pt-3 border-t border-slate-200 flex flex-col gap-2">
-                <a
-                  href={`mailto:${personalInfo.email}`}
-                  className="cyber-btn-primary w-full py-2.5 flex items-center justify-center gap-2 rounded-lg text-xs shadow-md"
-                >
-                  <Download className="w-4 h-4" />
-                  <span>Contact & Resume</span>
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Resume</span>
                 </a>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+      </div>
+    </header>
   );
 }

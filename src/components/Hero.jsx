@@ -1,312 +1,366 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Code2, 
   Palette, 
-  Mail, 
-  ArrowRight, 
-  Sparkles, 
-  CheckCircle2, 
-  Zap,
-  Globe
+  Sliders, 
+  ChevronRight 
 } from 'lucide-react';
-import { GithubIcon, LinkedinIcon } from './BrandIcons';
-import { personalInfo, statistics } from '../data/resumeData';
+import { personalInfo } from '../data/resumeData';
 
 export default function Hero() {
-  const [activePersona, setActivePersona] = useState('combined');
+  // Slider position from 0 to 100 (default 50 = half & half)
+  const [sliderPos, setSliderPos] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+  const [activeMode, setActiveMode] = useState('split'); // 'designer' | 'split' | 'coder'
+  const [hoverSide, setHoverSide] = useState(null); // 'designer' | 'coder' | null
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1
-      }
+  const heroSectionRef = useRef(null);
+  const faceContainerRef = useRef(null);
+  const targetPosRef = useRef(50);
+
+  // Smooth lerp loop using requestAnimationFrame
+  useEffect(() => {
+    let animationFrameId;
+    const animate = () => {
+      setSliderPos((currentPos) => {
+        const diff = targetPosRef.current - currentPos;
+        if (Math.abs(diff) < 0.2) {
+          return targetPosRef.current;
+        }
+        return currentPos + diff * 0.14;
+      });
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  // Handle mouse move across the hero to create Adham's fluid face-following effect
+  const handleMouseMove = (e) => {
+    if (isDragging || !faceContainerRef.current) return;
+    const rect = faceContainerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = Math.max(15, Math.min(85, (x / rect.width) * 100));
+    targetPosRef.current = percentage;
+
+    if (percentage < 45) {
+      setHoverSide('designer');
+    } else if (percentage > 55) {
+      setHoverSide('coder');
+    } else {
+      setHoverSide(null);
     }
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.5, ease: "easeOut" } 
+  const handleMouseLeave = () => {
+    if (!isDragging) {
+      targetPosRef.current = 50;
+      setHoverSide(null);
+      setActiveMode('split');
     }
   };
+
+  // Dragging support
+  const handleDragStart = () => {
+    setIsDragging(true);
+  };
+
+  const handleDrag = useCallback((e) => {
+    if (!isDragging || !faceContainerRef.current) return;
+    const rect = faceContainerRef.current.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const x = clientX - rect.left;
+    const percentage = Math.max(5, Math.min(95, (x / rect.width) * 100));
+    targetPosRef.current = percentage;
+    setSliderPos(percentage);
+
+    if (percentage < 35) {
+      setActiveMode('designer');
+      setHoverSide('designer');
+    } else if (percentage > 65) {
+      setActiveMode('coder');
+      setHoverSide('coder');
+    } else {
+      setActiveMode('split');
+      setHoverSide(null);
+    }
+  }, [isDragging]);
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleDrag);
+      window.addEventListener('mouseup', handleDragEnd);
+      window.addEventListener('touchmove', handleDrag);
+      window.addEventListener('touchend', handleDragEnd);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleDrag);
+      window.removeEventListener('mouseup', handleDragEnd);
+      window.removeEventListener('touchmove', handleDrag);
+      window.removeEventListener('touchend', handleDragEnd);
+    };
+  }, [isDragging, handleDrag]);
+
+  // Preset switchers
+  const setMode = (mode) => {
+    setActiveMode(mode);
+    if (mode === 'designer') {
+      targetPosRef.current = 88;
+      setHoverSide('designer');
+    } else if (mode === 'coder') {
+      targetPosRef.current = 12;
+      setHoverSide('coder');
+    } else {
+      targetPosRef.current = 50;
+      setHoverSide(null);
+    }
+  };
+
+  // Calculate designer and coder opacities
+  const designerOpacity = hoverSide === 'coder' ? 0.35 : 1;
+  const coderOpacity = hoverSide === 'designer' ? 0.35 : 1;
 
   return (
-    <section id="hero" className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-cyber-grid radial-vignette">
-      {/* Background Ambient Glow Orbs */}
-      <div className="absolute top-1/4 left-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-sky-400/15 rounded-full blur-[140px] pointer-events-none"></div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section 
+      id="hero" 
+      ref={heroSectionRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden bg-[#fbfbfc] text-[#222222] select-none"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Adham Dannaway Preset Mode Toggle Bar */}
         <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 md:mb-12"
         >
-          
-          {/* Left Column: Hero Text Content */}
-          <div className="lg:col-span-7 space-y-6">
-            
-            {/* Status Pill Badge */}
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200/80 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-indigo-600 animate-ping"></span>
-              <span className="w-2 h-2 rounded-full bg-indigo-600 -ml-4"></span>
-              <span className="font-mono text-xs text-indigo-700 font-semibold tracking-wide">
-                {personalInfo.status}
-              </span>
-            </motion.div>
-
-            {/* Main Headline */}
-            <motion.div variants={itemVariants} className="space-y-3">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 font-['Plus_Jakarta_Sans'] leading-[1.1]">
-                Crafting <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-sky-600">Responsive & Interactive</span> Web Experiences.
-              </h1>
-              <p className="text-lg sm:text-xl text-slate-600 font-normal max-w-2xl leading-relaxed">
-                Hi, I'm <strong className="text-slate-900 font-semibold">{personalInfo.name}</strong>. A {personalInfo.title} specializing in React.js, Tailwind CSS, API integration, and modular component architecture.
-              </p>
-            </motion.div>
-
-            {/* Quick Tech Badges */}
-            <motion.div variants={itemVariants} className="flex flex-wrap gap-2 pt-1">
-              {['React.js', 'Tailwind CSS', 'JavaScript (ES6+)', 'Express JS', 'Vite', 'FastAPI'].map((tech) => (
-                <motion.span 
-                  key={tech}
-                  whileHover={{ scale: 1.05, y: -1 }}
-                  className="px-3 py-1 rounded-md bg-white border border-slate-200 text-xs font-mono text-slate-700 hover:border-indigo-400 hover:text-indigo-600 transition-colors shadow-xs"
-                >
-                  #{tech}
-                </motion.span>
-              ))}
-            </motion.div>
-
-            {/* Action Buttons */}
-            <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-4 pt-4">
-              <motion.a
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                href="#projects"
-                className="cyber-btn-primary px-6 py-3.5 rounded-xl text-sm font-bold flex items-center gap-2 group shadow-lg"
-              >
-                <span>Explore Featured Projects</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </motion.a>
-
-              <motion.a
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                href="#contact"
-                className="cyber-btn-secondary px-6 py-3.5 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-xs"
-              >
-                <Mail className="w-4 h-4 text-indigo-600" />
-                <span>Contact Me</span>
-              </motion.a>
-            </motion.div>
-
-            {/* Social Links Bar */}
-            <motion.div variants={itemVariants} className="pt-6 border-t border-slate-200 flex items-center gap-6 text-slate-600">
-              <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">Connect:</span>
-              <motion.a 
-                whileHover={{ scale: 1.05, y: -1 }}
-                href={personalInfo.github} 
-                target="_blank" 
-                rel="noreferrer"
-                className="flex items-center gap-1.5 text-xs text-slate-700 hover:text-indigo-600 transition-colors font-medium"
-              >
-                <GithubIcon className="w-4 h-4" />
-                <span>GitHub</span>
-              </motion.a>
-              <motion.a 
-                whileHover={{ scale: 1.05, y: -1 }}
-                href={personalInfo.linkedin} 
-                target="_blank" 
-                rel="noreferrer"
-                className="flex items-center gap-1.5 text-xs text-slate-700 hover:text-indigo-600 transition-colors font-medium"
-              >
-                <LinkedinIcon className="w-4 h-4" />
-                <span>LinkedIn</span>
-              </motion.a>
-              <motion.a 
-                whileHover={{ scale: 1.05, y: -1 }}
-                href={`mailto:${personalInfo.email}`}
-                className="flex items-center gap-1.5 text-xs text-slate-700 hover:text-indigo-600 transition-colors font-medium"
-              >
-                <Mail className="w-4 h-4" />
-                <span>{personalInfo.email}</span>
-              </motion.a>
-            </motion.div>
-
+          {/* Status badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-mono text-slate-700">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>{personalInfo.status}</span>
           </div>
 
-          {/* Right Column: Dual Persona Interactive Card */}
-          <motion.div variants={itemVariants} className="lg:col-span-5">
-            <div className="glass-card rounded-2xl p-6 relative overflow-hidden border border-slate-200/90 shadow-xl bg-white/90">
-              
-              {/* Top Persona Toggle Header */}
-              <div className="flex items-center justify-between pb-4 border-b border-slate-200">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                  <div className="w-3 h-3 rounded-full bg-amber-400"></div>
-                  <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
-                </div>
-                <span className="text-xs font-mono text-slate-500 font-medium">shrishti_persona.config.js</span>
+          {/* Interactive Split Switcher */}
+          <div className="inline-flex items-center p-1 bg-white border border-slate-200 rounded-xl shadow-xs">
+            <button
+              onClick={() => setMode('designer')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+                activeMode === 'designer' 
+                  ? 'bg-slate-900 text-white font-semibold shadow-xs' 
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Palette className="w-3.5 h-3.5" />
+              <span>designer</span>
+            </button>
+
+            <button
+              onClick={() => setMode('split')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+                activeMode === 'split' 
+                  ? 'bg-slate-900 text-white font-semibold shadow-xs' 
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Sliders className="w-3.5 h-3.5" />
+              <span>half &amp; half</span>
+            </button>
+
+            <button
+              onClick={() => setMode('coder')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 ${
+                activeMode === 'coder' 
+                  ? 'bg-slate-900 text-white font-semibold shadow-xs' 
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Code2 className="w-3.5 h-3.5" />
+              <span>&lt;coder&gt;</span>
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Adham Dannaway Signature Split Layout Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative min-h-[460px] md:min-h-[540px]">
+          
+          {/* Left Column: Designer Title, Description & Curved Pointer Arrow */}
+          <motion.div 
+            style={{ opacity: designerOpacity }}
+            transition={{ duration: 0.3 }}
+            className="lg:col-span-3 text-center lg:text-left flex flex-col justify-center order-2 lg:order-1 transition-opacity duration-300"
+          >
+            <div className="space-y-4">
+              <a 
+                href="#projects" 
+                className="group inline-block"
+                title="View UI & Design Projects"
+              >
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 font-['Plus_Jakarta_Sans'] group-hover:text-indigo-600 transition-colors">
+                  designer
+                </h1>
+              </a>
+
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+                Product designer specialising in UI design, typography, and scalable design systems.
+              </p>
+
+              {/* Designer skills pills */}
+              <div className="flex flex-wrap gap-1.5 justify-center lg:justify-start pt-1">
+                {['UI/UX Systems', 'Responsive Web', 'Design Tokens', 'Accessibility'].map((item) => (
+                  <span key={item} className="text-[11px] px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 font-medium border border-slate-200/80">
+                    {item}
+                  </span>
+                ))}
               </div>
 
-              {/* Interactive Switch Buttons */}
-              <div className="my-4 p-1 bg-slate-100 rounded-xl border border-slate-200 flex items-center gap-1">
-                <button
-                  onClick={() => setActivePersona('coder')}
-                  className={`flex-1 py-2 px-3 rounded-lg text-xs font-mono flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                    activePersona === 'coder' 
-                      ? 'bg-indigo-600 text-white font-bold shadow-md' 
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
+              {/* Action Link */}
+              <div className="pt-2">
+                <a 
+                  href="#projects" 
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
                 >
-                  <Code2 className="w-3.5 h-3.5" />
-                  <span>Frontend Coder</span>
-                </button>
-
-                <button
-                  onClick={() => setActivePersona('combined')}
-                  className={`flex-1 py-2 px-3 rounded-lg text-xs font-mono flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                    activePersona === 'combined' 
-                      ? 'bg-gradient-to-r from-indigo-600 to-sky-600 text-white font-bold shadow-md' 
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                  <span>Hybrid</span>
-                </button>
-
-                <button
-                  onClick={() => setActivePersona('designer')}
-                  className={`flex-1 py-2 px-3 rounded-lg text-xs font-mono flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                    activePersona === 'designer' 
-                      ? 'bg-purple-600 text-white font-bold shadow-md' 
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  <Palette className="w-3.5 h-3.5" />
-                  <span>UI Craftsman</span>
-                </button>
+                  <span>Explore UI designs</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </a>
               </div>
+            </div>
 
-              {/* Dynamic Content View based on Toggle */}
-              <div className="space-y-4 min-h-[160px]">
-                {activePersona === 'coder' && (
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="bg-slate-900 p-4 rounded-xl border border-slate-800 font-mono text-xs text-slate-200 space-y-2 shadow-inner"
-                  >
-                    <div className="text-indigo-400">// React & State Engineering</div>
-                    <div><span className="text-sky-400">const</span> developer = &#123;</div>
-                    <div className="pl-4">name: <span className="text-emerald-400">'Shrishti Pandey'</span>,</div>
-                    <div className="pl-4">role: <span className="text-emerald-400">'Website Developer @ iBraine'</span>,</div>
-                    <div className="pl-4">stack: [<span className="text-amber-300">'React.js'</span>, <span className="text-amber-300">'Tailwind'</span>, <span className="text-amber-300">'REST API'</span>],</div>
-                    <div className="pl-4">reusableComponents: <span className="text-indigo-300">true</span>,</div>
-                    <div className="pl-4">marathiLocalization: <span className="text-indigo-300">true</span></div>
-                    <div>&#125;;</div>
-                  </motion.div>
-                )}
-
-                {activePersona === 'designer' && (
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="bg-slate-50 p-4 rounded-xl border border-purple-200 space-y-3"
-                  >
-                    <div className="flex items-center justify-between text-xs font-mono text-purple-700 font-semibold">
-                      <span>UI & Visual System</span>
-                      <span className="px-2 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-bold">Glassmorphism</span>
-                    </div>
-                    <div className="p-3 rounded-lg bg-white border border-slate-200 shadow-xs flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-indigo-600 shadow-xs"></div>
-                        <div className="w-6 h-6 rounded-full bg-purple-600 shadow-xs"></div>
-                        <div className="w-6 h-6 rounded-full bg-sky-500 shadow-xs"></div>
-                      </div>
-                      <span className="text-xs font-medium text-slate-600">Clean Slate Palette</span>
-                    </div>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      Clean slate grid layouts, 8pt spatial padding, responsive light card structures, and high contrast typography.
-                    </p>
-                  </motion.div>
-                )}
-
-                {activePersona === 'combined' && (
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="space-y-3"
-                  >
-                    <div className="bg-indigo-50/80 p-3.5 rounded-xl border border-indigo-200 flex items-start gap-3">
-                      <Zap className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-900 font-['Plus_Jakarta_Sans']">The Dual Advantage</h4>
-                        <p className="text-xs text-slate-600 mt-0.5">
-                          Combining front-end React architecture with pixel-perfect UI craftsmanship.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                      <div className="p-2.5 rounded-lg bg-white border border-slate-200 text-indigo-700 flex items-center gap-2 shadow-xs font-medium">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-indigo-600" />
-                        <span>Reusable Modules</span>
-                      </div>
-                      <div className="p-2.5 rounded-lg bg-white border border-slate-200 text-purple-700 flex items-center gap-2 shadow-xs font-medium">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-purple-600" />
-                        <span>FastAPI & REST APIs</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-
-              {/* Bottom Card Footer */}
-              <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-[11px] font-mono text-slate-500 font-medium">
-                <span className="flex items-center gap-1.5">
-                  <Globe className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>iBraine CRM Developer</span>
-                </span>
-                <span className="text-indigo-600 font-bold">CGPA: 7.88</span>
-              </div>
-
+            {/* Hand-drawn style pointer arrow pointing towards the face (visible on desktop) */}
+            <div className="hidden lg:block mt-6 ml-6 opacity-70">
+              <svg width="90" height="60" viewBox="0 0 90 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 50 C 40 50, 70 45, 80 15" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" fill="none" />
+                <path d="M72 18 L 81 12 L 85 22" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+              </svg>
             </div>
           </motion.div>
 
-        </motion.div>
-
-        {/* Stats Highlight Bar */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-4"
-        >
-          {statistics.map((stat, idx) => (
-            <motion.div 
-              key={idx}
-              whileHover={{ y: -4, scale: 1.02 }}
-              className="bg-white p-5 rounded-xl border border-slate-200 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-indigo-300 transition-all"
+          {/* Center Column: The Signature Adham Dannaway Split Face Interactive Container */}
+          <div className="lg:col-span-6 flex justify-center order-1 lg:order-2">
+            <div 
+              ref={faceContainerRef}
+              className="relative w-[320px] sm:w-[380px] md:w-[440px] lg:w-[460px] aspect-square rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 cursor-ew-resize group"
+              onMouseDown={handleDragStart}
+              onTouchStart={handleDragStart}
             >
-              <div className="flex items-baseline justify-between">
-                <span className="text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 font-['Plus_Jakarta_Sans']">
-                  {stat.value}
-                </span>
-                <span className="text-[10px] font-mono text-indigo-600 uppercase tracking-wider font-semibold">{stat.detail}</span>
+              {/* Coder Image Layer (Right / Full Underneath) */}
+              <img 
+                src="/split-avatar.jpg" 
+                alt="Shrishti Pandey - Coder" 
+                className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
+              />
+
+              {/* Designer Image Layer (Left / Clipped by sliderPos) */}
+              <div 
+                className="absolute inset-0 overflow-hidden pointer-events-none select-none"
+                style={{
+                  clipPath: `polygon(0% 0%, ${sliderPos}% 0%, ${sliderPos}% 100%, 0% 100%)`
+                }}
+              >
+                <img 
+                  src="/split-avatar.jpg" 
+                  alt="Shrishti Pandey - Designer" 
+                  className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
+                />
               </div>
-              <p className="text-xs font-semibold text-slate-600 mt-2">{stat.label}</p>
-            </motion.div>
-          ))}
-        </motion.div>
+
+              {/* Vertical Split Line Divider */}
+              <div 
+                className="absolute top-0 bottom-0 w-[3px] bg-white shadow-[0_0_12px_rgba(0,0,0,0.4)] pointer-events-none z-20"
+                style={{ left: `${sliderPos}%` }}
+              >
+                {/* Central Drag Handle Button */}
+                <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-white text-slate-900 border-2 border-slate-900/10 shadow-lg flex items-center justify-center pointer-events-auto cursor-grab active:cursor-grabbing hover:scale-110 transition-transform">
+                  <div className="flex items-center gap-0.5 text-slate-700">
+                    <span className="text-[10px] font-bold">&lang;</span>
+                    <span className="text-[10px] font-bold">&rang;</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Subtle Overlay Labels */}
+              <div className="absolute bottom-3 left-3 z-30 pointer-events-none">
+                <span className="px-2 py-1 rounded bg-black/50 backdrop-blur-md text-[10px] font-mono text-white tracking-wide">
+                  designer {Math.round(sliderPos)}%
+                </span>
+              </div>
+              <div className="absolute bottom-3 right-3 z-30 pointer-events-none">
+                <span className="px-2 py-1 rounded bg-black/50 backdrop-blur-md text-[10px] font-mono text-white tracking-wide">
+                  &lt;coder&gt; {Math.round(100 - sliderPos)}%
+                </span>
+              </div>
+
+              {/* Hover Instructions Badge */}
+              <div className="absolute top-3 inset-x-0 flex justify-center z-30 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span className="px-3 py-1 rounded-full bg-slate-950/70 backdrop-blur-md text-[11px] font-mono text-slate-200">
+                  Drag or move mouse to reveal
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Coder Title, Description & Curved Pointer Arrow */}
+          <motion.div 
+            style={{ opacity: coderOpacity }}
+            transition={{ duration: 0.3 }}
+            className="lg:col-span-3 text-center lg:text-right flex flex-col justify-center order-3 transition-opacity duration-300"
+          >
+            <div className="space-y-4">
+              <a 
+                href="#projects" 
+                className="group inline-block"
+                title="View Code & Frontend Projects"
+              >
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 font-['Plus_Jakarta_Sans'] group-hover:text-indigo-600 transition-colors">
+                  <span className="text-indigo-600 font-mono">&lt;</span>coder<span className="text-indigo-600 font-mono">&gt;</span>
+                </h1>
+              </a>
+
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+                Front end developer who writes clean, elegant and efficient React code.
+              </p>
+
+              {/* Coder skills pills */}
+              <div className="flex flex-wrap gap-1.5 justify-center lg:justify-end pt-1">
+                {['React.js', 'Tailwind CSS', 'REST APIs', 'FastAPI Auth'].map((item) => (
+                  <span key={item} className="text-[11px] px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 font-mono border border-slate-200/80">
+                    {item}
+                  </span>
+                ))}
+              </div>
+
+              {/* Action Link */}
+              <div className="pt-2">
+                <a 
+                  href="#skills" 
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
+                >
+                  <span>Explore engineering stack</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Hand-drawn style pointer arrow pointing towards the face (visible on desktop) */}
+            <div className="hidden lg:block mt-6 mr-6 opacity-70 flex justify-end">
+              <svg width="90" height="60" viewBox="0 0 90 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="rotate-y-180">
+                <path d="M10 50 C 40 50, 70 45, 80 15" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4 4" fill="none" />
+                <path d="M72 18 L 81 12 L 85 22" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+              </svg>
+            </div>
+          </motion.div>
+
+        </div>
 
       </div>
     </section>
