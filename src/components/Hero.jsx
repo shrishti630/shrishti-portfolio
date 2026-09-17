@@ -130,6 +130,17 @@ export default function Hero() {
     }
   };
 
+  const handleLinkClick = (e, path, sectionId) => {
+    e.preventDefault();
+    if (path === '/') {
+      window.history.pushState(null, '', '/');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.history.pushState(null, '', path);
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   // Calculate designer and coder side opacities based on hover side and slider position
   const designerOpacity = hoverSide === 'coder' || sliderPos < 35 ? 0.35 : 1;
   const coderOpacity = hoverSide === 'designer' || sliderPos > 65 ? 0.35 : 1;
@@ -140,54 +151,54 @@ export default function Hero() {
       ref={heroSectionRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden bg-transparent text-[#222222] select-none"
+      className="relative pt-20 pb-8 sm:pt-24 sm:pb-10 overflow-hidden bg-transparent text-[#222222] select-none"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Prominently Highlighted Name Showcase (Unique Font + Continuous Motion) */}
-        <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-14">
+        {/* Prominently Highlighted Name Showcase (Light, Thinner Typography + Seen together with Face UI) */}
+        <div className="text-center max-w-4xl mx-auto mb-3 sm:mb-5">
           
           {/* Identity Tag Badge */}
           <motion.div 
-            initial={{ opacity: 0, y: -15 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-indigo-200/90 shadow-xs text-xs font-mono text-indigo-800 mb-4"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md border border-indigo-200/90 shadow-xs text-[11px] font-mono text-indigo-700 mb-2.5"
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-500 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-600"></span>
             </span>
-            <span className="font-bold tracking-wider uppercase">[ FRONTEND DEVELOPER // UI CRAFTSMAN ]</span>
+            <span className="font-normal tracking-widest uppercase">[ FRONTEND DEVELOPER // UI CRAFTSMAN ]</span>
           </motion.div>
 
-          {/* Bold Name Highlight in Syne Typography with Multi-color Flowing Gradient */}
+          {/* Lighter, Thinner Name Highlight in Syne Typography */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.1 }}
             className="relative inline-block"
           >
-            {/* Ambient Radial Halo Glow behind Name */}
-            <div className="absolute -inset-6 bg-gradient-to-r from-indigo-500/15 via-purple-500/15 to-pink-500/15 rounded-full blur-2xl pointer-events-none -z-10 animate-pulse-glow"></div>
+            {/* Ambient Soft Radial Halo Glow */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 rounded-full blur-xl pointer-events-none -z-10"></div>
 
-            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold font-['Syne'] tracking-tight leading-none text-slate-900">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light font-['Syne'] tracking-[0.16em] sm:tracking-[0.2em] leading-tight text-slate-900 uppercase">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 via-pink-500 to-amber-500 animate-gradient-flow inline-block">
                 SHRISHTI PANDEY
               </span>
             </h1>
 
-            {/* Hand-drawn Animated SVG Brush Underline */}
-            <div className="relative mt-2 sm:mt-3 flex justify-center">
-              <svg className="w-56 sm:w-80 md:w-96 overflow-visible" height="14" viewBox="0 0 320 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Delicate Thin SVG Underline */}
+            <div className="relative mt-1 sm:mt-1.5 flex justify-center">
+              <svg className="w-48 sm:w-64 md:w-80 overflow-visible" height="10" viewBox="0 0 320 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <motion.path 
-                  d="M4 10 Q 80 3, 160 8 T 316 6" 
+                  d="M4 7 Q 80 2, 160 6 T 316 4" 
                   stroke="url(#name-underline-grad)" 
-                  strokeWidth="4.5" 
+                  strokeWidth="2.5" 
                   strokeLinecap="round"
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
-                  transition={{ duration: 1.4, delay: 0.3, ease: "easeOut" }}
+                  transition={{ duration: 1.2, delay: 0.25, ease: "easeOut" }}
                 />
                 <defs>
                   <linearGradient id="name-underline-grad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -200,40 +211,40 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* Handwritten Annotation in Caveat Font (Inspired by Gaurav Erande) */}
+          {/* Handwritten Annotation in Caveat Font (Light/Normal Weight) */}
           <motion.div 
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            className="mt-3.5 flex items-center justify-center gap-2 text-slate-600"
+            transition={{ delay: 0.3 }}
+            className="mt-1.5 flex items-center justify-center gap-2 text-slate-600"
           >
-            <span className="font-['Caveat'] text-2xl sm:text-3xl font-bold text-purple-600 -rotate-1 tracking-wide">
+            <span className="font-['Caveat'] text-base sm:text-lg md:text-xl font-normal text-purple-600 -rotate-1 tracking-wider">
               ✦ crafting clean React applications &amp; modern design systems
             </span>
           </motion.div>
 
         </div>
 
-        {/* Adham Dannaway Preset Mode Toggle Bar */}
+        {/* Adham Dannaway Preset Mode Toggle Bar (Compact) */}
         <motion.div 
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 md:mb-12"
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 sm:mb-6"
         >
           {/* Status badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-xs font-mono text-slate-700 shadow-xs">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-xs font-mono text-slate-700 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>{personalInfo.status}</span>
+            <span className="font-normal">{personalInfo.status}</span>
           </div>
 
           {/* Interactive Split Switcher */}
-          <div className="inline-flex items-center p-1 bg-white/90 backdrop-blur-md border border-slate-200 rounded-xl shadow-xs">
+          <div className="inline-flex items-center p-0.5 bg-white/90 backdrop-blur-md border border-slate-200 rounded-xl shadow-xs">
             <button
               onClick={() => setMode('designer')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-lg text-xs font-normal transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeMode === 'designer' || sliderPos > 85
-                  ? 'bg-slate-900 text-white font-semibold shadow-xs' 
+                  ? 'bg-slate-900 text-white font-medium shadow-xs' 
                   : 'text-slate-600 hover:text-slate-900'
               }`}
               title="Slide right to fully reveal Designer image"
@@ -244,9 +255,9 @@ export default function Hero() {
 
             <button
               onClick={() => setMode('split')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-lg text-xs font-normal transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeMode === 'split' && sliderPos >= 35 && sliderPos <= 65
-                  ? 'bg-slate-900 text-white font-semibold shadow-xs' 
+                  ? 'bg-slate-900 text-white font-medium shadow-xs' 
                   : 'text-slate-600 hover:text-slate-900'
               }`}
               title="Half Designer, Half Coder"
@@ -257,9 +268,9 @@ export default function Hero() {
 
             <button
               onClick={() => setMode('coder')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-lg text-xs font-mono font-normal transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeMode === 'coder' || sliderPos < 15
-                  ? 'bg-slate-900 text-white font-semibold shadow-xs' 
+                  ? 'bg-slate-900 text-white font-medium shadow-xs' 
                   : 'text-slate-600 hover:text-slate-900'
               }`}
               title="Slide left to fully reveal Coder image"
@@ -270,44 +281,46 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* Adham Dannaway Signature Split Layout Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative min-h-[460px] md:min-h-[540px]">
+        {/* Adham Dannaway Signature Split Layout Grid (Seen Together Above the Fold) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-center relative">
           
-          {/* Left Column: Designer Title, Description & Curved Pointer Arrow */}
+          {/* Left Column: Designer Title, Description & Action Link */}
           <motion.div 
             style={{ opacity: designerOpacity }}
             transition={{ duration: 0.3 }}
             className="lg:col-span-3 text-center lg:text-left flex flex-col justify-center order-2 lg:order-1 transition-opacity duration-300"
           >
-            <div className="space-y-4">
+            <div className="space-y-3">
               <a 
-                href="#projects" 
+                href="/portfolio" 
+                onClick={(e) => handleLinkClick(e, '/portfolio', 'projects')}
                 className="group inline-block"
                 title="View UI & Design Projects"
               >
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 font-['Plus_Jakarta_Sans'] group-hover:text-indigo-600 transition-colors">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight text-slate-900 font-['Plus_Jakarta_Sans'] group-hover:text-indigo-600 transition-colors">
                   designer
-                </h1>
+                </h2>
               </a>
 
-              <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">
                 Product designer specialising in UI design, typography, and scalable design systems.
               </p>
 
               {/* Designer skills pills */}
-              <div className="flex flex-wrap gap-1.5 justify-center lg:justify-start pt-1">
+              <div className="flex flex-wrap gap-1.5 justify-center lg:justify-start pt-0.5">
                 {['UI/UX Systems', 'Responsive Web', 'Design Tokens', 'Accessibility'].map((item) => (
-                  <span key={item} className="text-[11px] px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 font-medium border border-slate-200/80">
+                  <span key={item} className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-normal border border-slate-200/70">
                     {item}
                   </span>
                 ))}
               </div>
 
-              {/* Action Link */}
-              <div className="pt-2">
+              {/* Action Link (Clean route) */}
+              <div className="pt-1">
                 <a 
-                  href="#projects" 
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
+                  href="/portfolio" 
+                  onClick={(e) => handleLinkClick(e, '/portfolio', 'projects')}
+                  className="inline-flex items-center gap-1.5 text-xs font-normal text-indigo-600 hover:text-indigo-800 transition-colors"
                 >
                   <span>Explore UI designs</span>
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -361,7 +374,7 @@ export default function Hero() {
               */}
               <div 
                 ref={faceContainerRef}
-                className="relative w-[320px] sm:w-[380px] md:w-[440px] lg:w-[460px] aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-950 cursor-ew-resize group"
+                className="relative w-[280px] sm:w-[320px] md:w-[340px] lg:w-[350px] aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-950 cursor-ew-resize group"
                 onMouseDown={handleDragStart}
                 onTouchStart={handleDragStart}
               >
@@ -394,7 +407,7 @@ export default function Hero() {
                   style={{ left: `${sliderPos}%` }}
                 >
                   {/* Central Drag Handle Button */}
-                  <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-white text-slate-900 border-2 border-slate-900/15 shadow-xl flex items-center justify-center pointer-events-auto cursor-grab active:cursor-grabbing hover:scale-110 transition-transform">
+                  <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-white text-slate-900 border-2 border-slate-900/15 shadow-xl flex items-center justify-center pointer-events-auto cursor-grab active:cursor-grabbing hover:scale-110 transition-transform">
                     <div className="flex items-center gap-0.5 text-slate-800 font-bold">
                       <span className="text-[10px]">&lang;</span>
                       <span className="text-[10px]">&rang;</span>
@@ -404,9 +417,9 @@ export default function Hero() {
 
                 {/* Bottom Overlay Live Status */}
                 <div className="absolute bottom-3 left-3 z-30 pointer-events-none">
-                  <span className={`px-2.5 py-1 rounded-md text-[10px] font-mono tracking-wide transition-all ${
+                  <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono tracking-wide transition-all ${
                     sliderPos > 50 
-                      ? 'bg-purple-600/90 text-white font-bold shadow-xs' 
+                      ? 'bg-purple-600/90 text-white font-medium shadow-xs' 
                       : 'bg-black/50 text-slate-300 backdrop-blur-md'
                   }`}>
                     designer {Math.round(sliderPos)}% {sliderPos >= 98 && '✓ FULL'}
@@ -414,9 +427,9 @@ export default function Hero() {
                 </div>
 
                 <div className="absolute bottom-3 right-3 z-30 pointer-events-none">
-                  <span className={`px-2.5 py-1 rounded-md text-[10px] font-mono tracking-wide transition-all ${
+                  <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono tracking-wide transition-all ${
                     sliderPos < 50 
-                      ? 'bg-indigo-600/90 text-white font-bold shadow-xs' 
+                      ? 'bg-indigo-600/90 text-white font-medium shadow-xs' 
                       : 'bg-black/50 text-slate-300 backdrop-blur-md'
                   }`}>
                     &lt;coder&gt; {Math.round(100 - sliderPos)}% {sliderPos <= 2 && '✓ FULL'}
@@ -425,7 +438,7 @@ export default function Hero() {
 
                 {/* Hover Instructions Helper Badge */}
                 <div className="absolute top-3 inset-x-0 flex justify-center z-30 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <span className="px-3 py-1 rounded-full bg-slate-950/75 backdrop-blur-md text-[11px] font-mono text-slate-200 shadow-md">
+                  <span className="px-3 py-0.5 rounded-full bg-slate-950/75 backdrop-blur-md text-[10px] font-mono text-slate-200 shadow-md">
                     Move cursor right for Designer | Move left for Coder
                   </span>
                 </div>
@@ -435,41 +448,43 @@ export default function Hero() {
 
           </div>
 
-          {/* Right Column: Coder Title, Description & Curved Pointer Arrow */}
+          {/* Right Column: Coder Title, Description & Action Link */}
           <motion.div 
             style={{ opacity: coderOpacity }}
             transition={{ duration: 0.3 }}
             className="lg:col-span-3 text-center lg:text-right flex flex-col justify-center order-3 transition-opacity duration-300"
           >
-            <div className="space-y-4">
+            <div className="space-y-3">
               <a 
-                href="#projects" 
+                href="/skills" 
+                onClick={(e) => handleLinkClick(e, '/skills', 'skills')}
                 className="group inline-block"
                 title="View Code & Frontend Projects"
               >
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 font-['Plus_Jakarta_Sans'] group-hover:text-indigo-600 transition-colors">
-                  <span className="text-indigo-600 font-mono">&lt;</span>coder<span className="text-indigo-600 font-mono">&gt;</span>
-                </h1>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight text-slate-900 font-['Plus_Jakarta_Sans'] group-hover:text-indigo-600 transition-colors">
+                  <span className="text-indigo-600 font-mono font-light">&lt;</span>coder<span className="text-indigo-600 font-mono font-light">&gt;</span>
+                </h2>
               </a>
 
-              <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">
                 Front end developer who writes clean, elegant and efficient React code.
               </p>
 
               {/* Coder skills pills */}
-              <div className="flex flex-wrap gap-1.5 justify-center lg:justify-end pt-1">
+              <div className="flex flex-wrap gap-1.5 justify-center lg:justify-end pt-0.5">
                 {['React.js', 'Tailwind CSS', 'REST APIs', 'FastAPI Auth'].map((item) => (
-                  <span key={item} className="text-[11px] px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 font-mono border border-slate-200/80">
+                  <span key={item} className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono font-normal border border-slate-200/70">
                     {item}
                   </span>
                 ))}
               </div>
 
-              {/* Action Link */}
-              <div className="pt-2">
+              {/* Action Link (Clean route) */}
+              <div className="pt-1">
                 <a 
-                  href="#skills" 
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
+                  href="/skills" 
+                  onClick={(e) => handleLinkClick(e, '/skills', 'skills')}
+                  className="inline-flex items-center gap-1.5 text-xs font-normal text-indigo-600 hover:text-indigo-800 transition-colors"
                 >
                   <span>Explore engineering stack</span>
                   <ChevronRight className="w-3.5 h-3.5" />

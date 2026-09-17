@@ -39,7 +39,7 @@ export default function Skills() {
           <h3>Skills &amp; Tools</h3>
         </div>
         <div className="text-center -mt-8 mb-10">
-          <span className="font-['Caveat'] text-xl sm:text-2xl text-indigo-400 font-bold -rotate-1 inline-block">
+          <span className="font-['Caveat'] text-lg sm:text-xl text-indigo-400 font-normal -rotate-1 inline-block tracking-wider">
             * core technology stack &amp; modern developer tools
           </span>
         </div>

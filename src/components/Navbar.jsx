@@ -25,51 +25,64 @@ export default function Navbar({ onOpenAestheticModal }) {
   };
 
   const navLinks = [
-    { name: 'about', href: '#about' },
-    { name: 'skills', href: '#skills' },
-    { name: 'portfolio', href: '#projects' },
-    { name: 'experience', href: '#experience' },
-    { name: 'contact', href: '#contact' }
+    { name: 'about', path: '/about', sectionId: 'about' },
+    { name: 'skills', path: '/skills', sectionId: 'skills' },
+    { name: 'portfolio', path: '/portfolio', sectionId: 'projects' },
+    { name: 'experience', path: '/experience', sectionId: 'experience' },
+    { name: 'contact', path: '/contact', sectionId: 'contact' }
   ];
+
+  const handleNavClick = (e, path, sectionId) => {
+    e.preventDefault();
+    if (path === '/') {
+      window.history.pushState(null, '', '/');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.history.pushState(null, '', path);
+      const target = document.getElementById(sectionId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    setMobileMenuOpen(false);
+  };
 
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled 
           ? 'bg-white/95 backdrop-blur-md border-b border-slate-200/80 py-3 shadow-xs' 
-          : 'bg-white/80 backdrop-blur-xs py-5'
+          : 'bg-white/80 backdrop-blur-xs py-4'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Distinct Highlighted Logo */}
+          {/* SP Monogram Logo Only (no repeated name in header) */}
           <a 
-            href="#hero" 
-            className="flex items-center gap-2.5 text-slate-900 group"
+            href="/" 
+            onClick={(e) => handleNavClick(e, '/', 'hero')}
+            className="flex items-center text-slate-900 group"
+            title="Shrishti Pandey (SP)"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-purple-600 p-[1.5px] shadow-xs">
-              <div className="w-full h-full bg-white rounded-[6px] flex items-center justify-center">
-                <span className="font-['Syne'] font-extrabold text-xs text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 p-[1.5px] shadow-xs group-hover:scale-105 transition-transform">
+              <div className="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
+                <span className="font-['Syne'] font-bold text-sm tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
                   SP
                 </span>
               </div>
             </div>
-            <div className="flex flex-col">
-              <span className="font-['Syne'] font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors flex items-center gap-1">
-                SHRISHTI<span className="text-indigo-600">.</span>PANDEY
-              </span>
-            </div>
           </a>
 
-          {/* Desktop Lowercase Navigation (Adham Dannaway style) */}
-          <nav className="hidden md:flex items-center gap-6">
-            <ul className="flex items-center gap-6 list-none m-0 p-0">
+          {/* Desktop Lowercase Navigation (Clean routes, light font) */}
+          <nav className="hidden md:flex items-center gap-7">
+            <ul className="flex items-center gap-7 list-none m-0 p-0">
               {navLinks.map((link) => (
                 <li key={link.name}>
                   <a
-                    href={link.href}
-                    className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors lowercase tracking-wide"
+                    href={link.path}
+                    onClick={(e) => handleNavClick(e, link.path, link.sectionId)}
+                    className="text-sm font-normal text-slate-600 hover:text-slate-900 transition-colors lowercase tracking-wider hover:underline underline-offset-4 decoration-indigo-400"
                   >
                     {link.name}
                   </a>
@@ -167,9 +180,9 @@ export default function Navbar({ onOpenAestheticModal }) {
                 {navLinks.map((link) => (
                   <a
                     key={link.name}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="px-3 py-2 text-sm font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-lg lowercase"
+                    href={link.path}
+                    onClick={(e) => handleNavClick(e, link.path, link.sectionId)}
+                    className="px-3 py-2 text-sm font-normal text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-lg lowercase tracking-wide"
                   >
                     {link.name}
                   </a>

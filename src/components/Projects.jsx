@@ -43,7 +43,7 @@ export default function Projects() {
           <h3>Some of my latest work</h3>
         </div>
         <div className="text-center -mt-8 mb-10">
-          <span className="font-['Caveat'] text-xl sm:text-2xl text-purple-400 font-bold -rotate-1 inline-block">
+          <span className="font-['Caveat'] text-lg sm:text-xl text-purple-400 font-normal -rotate-1 inline-block tracking-wider">
             * interactive case studies &amp; live production applications
           </span>
         </div>

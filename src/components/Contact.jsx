@@ -47,7 +47,7 @@ export default function Contact() {
           <h3>Get in touch</h3>
         </div>
         <div className="text-center -mt-8 mb-10">
-          <span className="font-['Caveat'] text-xl sm:text-2xl text-purple-600 font-bold -rotate-1 inline-block">
+          <span className="font-['Caveat'] text-lg sm:text-xl text-purple-600 font-normal -rotate-1 inline-block tracking-wider">
             * let&apos;s build something exceptional together
           </span>
         </div>

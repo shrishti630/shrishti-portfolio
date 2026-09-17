@@ -4,17 +4,23 @@ import { GithubIcon, LinkedinIcon } from './BrandIcons';
 import { personalInfo } from '../data/resumeData';
 
 export default function Footer() {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleNav = (e, path, sectionId) => {
+    e.preventDefault();
+    if (path === '/') {
+      window.history.pushState(null, '', '/');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.history.pushState(null, '', path);
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const navLinks = [
-    { name: 'about', href: '#about' },
-    { name: 'skills', href: '#skills' },
-    { name: 'portfolio', href: '#projects' },
-    { name: 'experience', href: '#experience' },
-    { name: 'achievements', href: '#achievements' },
-    { name: 'contact', href: '#contact' }
+    { name: 'about', path: '/about', sectionId: 'about' },
+    { name: 'skills', path: '/skills', sectionId: 'skills' },
+    { name: 'portfolio', path: '/portfolio', sectionId: 'projects' },
+    { name: 'experience', path: '/experience', sectionId: 'experience' },
+    { name: 'contact', path: '/contact', sectionId: 'contact' }
   ];
 
   return (
@@ -27,12 +33,13 @@ export default function Footer() {
           {/* Logo & Subtitle */}
           <div className="text-center md:text-left space-y-1">
             <a 
-              href="#hero"
-              className="text-lg font-bold text-white hover:text-indigo-400 transition-colors font-['Plus_Jakarta_Sans']"
+              href="/"
+              onClick={(e) => handleNav(e, '/', 'hero')}
+              className="text-base font-normal text-white hover:text-indigo-400 transition-colors font-['Plus_Jakarta_Sans'] tracking-wider"
             >
               © 2026 {personalInfo.name}
             </a>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 font-light">
               Product designer &amp; front end developer
             </p>
           </div>
@@ -42,8 +49,9 @@ export default function Footer() {
             {navLinks.map((link) => (
               <li key={link.name}>
                 <a
-                  href={link.href}
-                  className="text-slate-400 hover:text-white transition-colors lowercase font-medium"
+                  href={link.path}
+                  onClick={(e) => handleNav(e, link.path, link.sectionId)}
+                  className="text-slate-400 hover:text-white transition-colors lowercase font-light tracking-wider"
                 >
                   {link.name}
                 </a>
