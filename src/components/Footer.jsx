@@ -4,11 +4,16 @@ import { GithubIcon, LinkedinIcon } from './BrandIcons';
 import { personalInfo } from '../data/resumeData';
 
 export default function Footer() {
+  const scrollToTop = (e) => {
+    if (e) e.preventDefault();
+    window.history.pushState(null, '', '/');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleNav = (e, path, sectionId) => {
     e.preventDefault();
     if (path === '/') {
-      window.history.pushState(null, '', '/');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollToTop();
     } else {
       window.history.pushState(null, '', path);
       document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
