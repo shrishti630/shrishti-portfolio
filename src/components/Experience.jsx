@@ -12,6 +12,11 @@ export default function Experience() {
         <div className="header-center">
           <h3>Work Experience</h3>
         </div>
+        <div className="text-center -mt-8 mb-10">
+          <span className="font-['Caveat'] text-xl sm:text-2xl text-purple-600 font-bold -rotate-1 inline-block">
+            * commercial CRM platforms, internships &amp; web solutions
+          </span>
+        </div>
 
         {/* Clean Timeline List */}
         <div className="max-w-4xl mx-auto space-y-8">

@@ -38,6 +38,11 @@ export default function Skills() {
         <div className="header-center">
           <h3>Skills &amp; Tools</h3>
         </div>
+        <div className="text-center -mt-8 mb-10">
+          <span className="font-['Caveat'] text-xl sm:text-2xl text-indigo-400 font-bold -rotate-1 inline-block">
+            * core technology stack &amp; modern developer tools
+          </span>
+        </div>
 
         {/* Tab Buttons */}
         <div className="flex justify-center gap-2 mb-12">

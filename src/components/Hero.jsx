@@ -140,25 +140,95 @@ export default function Hero() {
       ref={heroSectionRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden bg-[#fbfbfc] text-[#222222] select-none"
+      className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden bg-transparent text-[#222222] select-none"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
+        {/* Prominently Highlighted Name Showcase (Unique Font + Continuous Motion) */}
+        <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-14">
+          
+          {/* Identity Tag Badge */}
+          <motion.div 
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-indigo-200/90 shadow-xs text-xs font-mono text-indigo-800 mb-4"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-500 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-600"></span>
+            </span>
+            <span className="font-bold tracking-wider uppercase">[ FRONTEND DEVELOPER // UI CRAFTSMAN ]</span>
+          </motion.div>
+
+          {/* Bold Name Highlight in Syne Typography with Multi-color Flowing Gradient */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="relative inline-block"
+          >
+            {/* Ambient Radial Halo Glow behind Name */}
+            <div className="absolute -inset-6 bg-gradient-to-r from-indigo-500/15 via-purple-500/15 to-pink-500/15 rounded-full blur-2xl pointer-events-none -z-10 animate-pulse-glow"></div>
+
+            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold font-['Syne'] tracking-tight leading-none text-slate-900">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 via-pink-500 to-amber-500 animate-gradient-flow inline-block">
+                SHRISHTI PANDEY
+              </span>
+            </h1>
+
+            {/* Hand-drawn Animated SVG Brush Underline */}
+            <div className="relative mt-2 sm:mt-3 flex justify-center">
+              <svg className="w-56 sm:w-80 md:w-96 overflow-visible" height="14" viewBox="0 0 320 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <motion.path 
+                  d="M4 10 Q 80 3, 160 8 T 316 6" 
+                  stroke="url(#name-underline-grad)" 
+                  strokeWidth="4.5" 
+                  strokeLinecap="round"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1.4, delay: 0.3, ease: "easeOut" }}
+                />
+                <defs>
+                  <linearGradient id="name-underline-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#4f46e5" />
+                    <stop offset="50%" stopColor="#d946ef" />
+                    <stop offset="100%" stopColor="#f59e0b" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+          </motion.div>
+
+          {/* Handwritten Annotation in Caveat Font (Inspired by Gaurav Erande) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            className="mt-3.5 flex items-center justify-center gap-2 text-slate-600"
+          >
+            <span className="font-['Caveat'] text-2xl sm:text-3xl font-bold text-purple-600 -rotate-1 tracking-wide">
+              ✦ crafting clean React applications &amp; modern design systems
+            </span>
+          </motion.div>
+
+        </div>
+
         {/* Adham Dannaway Preset Mode Toggle Bar */}
         <motion.div 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 md:mb-12"
         >
           {/* Status badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-mono text-slate-700">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-xs font-mono text-slate-700 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>{personalInfo.status}</span>
           </div>
 
           {/* Interactive Split Switcher */}
-          <div className="inline-flex items-center p-1 bg-white border border-slate-200 rounded-xl shadow-xs">
+          <div className="inline-flex items-center p-1 bg-white/90 backdrop-blur-md border border-slate-200 rounded-xl shadow-xs">
             <button
               onClick={() => setMode('designer')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${

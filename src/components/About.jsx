@@ -19,6 +19,11 @@ export default function About() {
         <div className="header-center">
           <h3>About me</h3>
         </div>
+        <div className="text-center -mt-8 mb-10">
+          <span className="font-['Caveat'] text-xl sm:text-2xl text-purple-600 font-bold -rotate-1 inline-block">
+            * where engineering architecture meets user empathy
+          </span>
+        </div>
 
         {/* Dual Identity Story Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-16">

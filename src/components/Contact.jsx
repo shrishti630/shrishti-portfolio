@@ -46,6 +46,11 @@ export default function Contact() {
         <div className="header-center">
           <h3>Get in touch</h3>
         </div>
+        <div className="text-center -mt-8 mb-10">
+          <span className="font-['Caveat'] text-xl sm:text-2xl text-purple-600 font-bold -rotate-1 inline-block">
+            * let&apos;s build something exceptional together
+          </span>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start max-w-6xl mx-auto">
           

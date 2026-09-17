@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
+import AmbientBackground from './components/AmbientBackground';
 import Hero from './components/Hero';
 import Projects from './components/Projects';
 import About from './components/About';
@@ -16,6 +17,9 @@ export default function App() {
   return (
     <div className="bg-[#fbfbfc] text-[#222222] min-h-screen selection:bg-indigo-500/20 selection:text-indigo-600 relative overflow-x-hidden">
       
+      {/* Continuously Moving Ambient Background: Drifting Grid, Aurora Glow Blobs & Particle Constellation */}
+      <AmbientBackground />
+
       {/* Adham Dannaway Top Navigation */}
       <Navbar onOpenAestheticModal={() => setIsAestheticModalOpen(true)} />
 

@@ -42,6 +42,11 @@ export default function Projects() {
         <div className="header-center">
           <h3>Some of my latest work</h3>
         </div>
+        <div className="text-center -mt-8 mb-10">
+          <span className="font-['Caveat'] text-xl sm:text-2xl text-purple-400 font-bold -rotate-1 inline-block">
+            * interactive case studies &amp; live production applications
+          </span>
+        </div>
 
         {/* Filter Tabs */}
         <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
