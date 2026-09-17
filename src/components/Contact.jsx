@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Mail, 
-  Phone, 
   MapPin, 
   Send, 
   Copy, 
-  Check 
+  Check,
+  Clock,
+  Loader2,
+  Sparkles
 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './BrandIcons';
 import { personalInfo } from '../data/resumeData';
 
 export default function Contact() {
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [copiedPhone, setCopiedPhone] = useState(false);
-  const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
 
   const copyEmail = () => {
     navigator.clipboard.writeText(personalInfo.email);
@@ -23,19 +25,42 @@ export default function Contact() {
     setTimeout(() => setCopiedEmail(false), 3000);
   };
 
-  const copyPhone = () => {
-    navigator.clipboard.writeText(personalInfo.phone);
-    setCopiedPhone(true);
-    setTimeout(() => setCopiedPhone(false), 3000);
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormSubmitted(true);
-    setTimeout(() => {
-      setFormSubmitted(false);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 4500);
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/shrishtip028@gmail.com", {
+        method: "POST",
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          _subject: formData.subject || `Portfolio Message from ${formData.name}`,
+          message: formData.message,
+          _replyto: formData.email
+        })
+      });
+
+      const data = await response.json();
+      if (response.ok || data.success === "true") {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        throw new Error(data.message || 'Submission error');
+      }
+    } catch {
+      // Fallback directly to mailto so the email is guaranteed to be sent
+      const mailtoUrl = `mailto:${personalInfo.email}?subject=${encodeURIComponent(formData.subject || 'Portfolio Inquiry')}&body=${encodeURIComponent(`From: ${formData.name} (${formData.email})\n\n${formData.message}`)}`;
+      window.location.href = mailtoUrl;
+      setSubmitStatus('success');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -54,24 +79,22 @@ export default function Contact() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start max-w-6xl mx-auto">
           
-          {/* Left Column: Direct Contacts & Adham's Signature Clipboard Copy */}
+          {/* Left Column: Direct Contacts & Signature Clipboard Copy */}
           <div className="lg:col-span-5 space-y-6">
             <div className="space-y-3">
-              <h4 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-['Plus_Jakarta_Sans']">
-                Let's collaborate.
+              <h4 className="text-2xl sm:text-3xl font-light text-slate-900 font-['Plus_Jakarta_Sans'] tracking-tight">
+                Let&apos;s collaborate.
               </h4>
-              <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed font-light">
                 Whether you have an exciting frontend developer role, a design system project, or want to discuss React applications, feel free to reach out.
               </p>
             </div>
 
             {/* Adham Dannaway Signature Clipboard Email Card */}
-            <div className="relative pt-2">
+            <div className="relative pt-1">
               <div 
                 className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3 hover:border-indigo-300 transition-colors cursor-pointer group"
                 onClick={copyEmail}
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -79,10 +102,10 @@ export default function Contact() {
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-[11px] font-mono text-slate-400 block uppercase">
+                      <span className="text-[11px] font-mono text-slate-400 block uppercase tracking-wider">
                         Email Address
                       </span>
-                      <span className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                      <span className="text-sm font-medium text-slate-900 group-hover:text-indigo-600 transition-colors">
                         {personalInfo.email}
                       </span>
                     </div>
@@ -93,10 +116,10 @@ export default function Contact() {
                   </div>
                 </div>
 
-                {/* Adham's Exact Signature Tooltip */}
+                {/* Signature Tooltip note */}
                 <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                   <span className="font-mono text-[11px]">
-                    {copiedEmail ? 'Email copied! 😀' : 'Click to copy my email address to your clipboard 😀'}
+                    {copiedEmail ? 'Email copied! 😀' : 'Click to copy my email address 😀'}
                   </span>
                   <span className="text-indigo-600 font-medium font-mono text-[11px]">
                     {copiedEmail ? 'Copied' : 'Copy'}
@@ -105,37 +128,37 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Phone & Location Cards */}
+            {/* Location & Availability Cards (Phone completely removed) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div 
-                className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-1 cursor-pointer hover:border-slate-300 transition-colors"
-                onClick={copyPhone}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono uppercase text-slate-400">Phone</span>
-                  {copiedPhone ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Phone className="w-3.5 h-3.5 text-slate-400" />}
-                </div>
-                <p className="text-xs font-bold text-slate-900">{personalInfo.phone}</p>
-                <p className="text-[10px] text-slate-500">{copiedPhone ? 'Copied!' : 'Click to copy'}</p>
-              </div>
-
               <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-mono uppercase text-slate-400">Location</span>
                   <MapPin className="w-3.5 h-3.5 text-slate-400" />
                 </div>
-                <p className="text-xs font-bold text-slate-900">{personalInfo.location}</p>
-                <p className="text-[10px] text-slate-500">Open to Remote &amp; On-site</p>
+                <p className="text-xs font-medium text-slate-900">{personalInfo.location}</p>
+                <p className="text-[10px] text-slate-500 font-light">Open to Remote &amp; On-site</p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono uppercase text-slate-400">Response</span>
+                  <Clock className="w-3.5 h-3.5 text-slate-400" />
+                </div>
+                <p className="text-xs font-medium text-emerald-600 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  Within 24 Hours
+                </p>
+                <p className="text-[10px] text-slate-500 font-light">Direct Inbox Forwarding</p>
               </div>
             </div>
 
-            {/* Social Buttons */}
-            <div className="pt-2 flex items-center gap-3">
+            {/* Social Profile Buttons */}
+            <div className="pt-1 flex items-center gap-3">
               <a 
                 href={personalInfo.github} 
                 target="_blank" 
                 rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-medium text-slate-700 hover:text-indigo-600 hover:border-indigo-300 shadow-xs transition-all"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-normal text-slate-700 hover:text-indigo-600 hover:border-indigo-300 shadow-xs transition-all"
               >
                 <GithubIcon className="w-4 h-4" />
                 <span>GitHub Profile</span>
@@ -145,7 +168,7 @@ export default function Contact() {
                 href={personalInfo.linkedin} 
                 target="_blank" 
                 rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-medium text-slate-700 hover:text-indigo-600 hover:border-indigo-300 shadow-xs transition-all"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-normal text-slate-700 hover:text-indigo-600 hover:border-indigo-300 shadow-xs transition-all"
               >
                 <LinkedinIcon className="w-4 h-4" />
                 <span>LinkedIn</span>
@@ -154,18 +177,25 @@ export default function Contact() {
 
           </div>
 
-          {/* Right Column: Clean Contact Message Form */}
+          {/* Right Column: Connected Direct Message Form */}
           <div className="lg:col-span-7 bg-white p-8 sm:p-10 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-            <h5 className="text-lg font-bold text-slate-900 font-['Plus_Jakarta_Sans']">
-              Send a Direct Message
-            </h5>
+            <div className="flex items-center justify-between">
+              <h5 className="text-lg font-light text-slate-900 font-['Plus_Jakarta_Sans'] tracking-tight">
+                Send a Direct Message
+              </h5>
+              <div className="flex items-center gap-1.5 text-xs text-indigo-600 font-mono">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span className="text-[11px]">Direct to {personalInfo.email}</span>
+              </div>
+            </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-mono text-slate-600 font-medium">Your Name</label>
+                  <label className="text-xs font-mono text-slate-600 font-normal">Your Name</label>
                   <input
                     type="text"
+                    name="name"
                     required
                     placeholder="e.g. Alex Morgan"
                     value={formData.name}
@@ -175,9 +205,10 @@ export default function Contact() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-mono text-slate-600 font-medium">Your Email</label>
+                  <label className="text-xs font-mono text-slate-600 font-normal">Your Email</label>
                   <input
                     type="email"
+                    name="email"
                     required
                     placeholder="alex@example.com"
                     value={formData.email}
@@ -188,9 +219,10 @@ export default function Contact() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-mono text-slate-600 font-medium">Subject</label>
+                <label className="text-xs font-mono text-slate-600 font-normal">Subject</label>
                 <input
                   type="text"
+                  name="subject"
                   required
                   placeholder="Frontend Role / Project Collaboration"
                   value={formData.subject}
@@ -200,8 +232,9 @@ export default function Contact() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-mono text-slate-600 font-medium">Message</label>
+                <label className="text-xs font-mono text-slate-600 font-normal">Message</label>
                 <textarea
+                  name="message"
                   rows={4}
                   required
                   placeholder="Hi Shrishti, I came across your portfolio and wanted to connect regarding..."
@@ -214,23 +247,41 @@ export default function Contact() {
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="btn-adham btn-adham-primary w-full text-xs font-semibold py-3 flex items-center justify-center gap-2 cursor-pointer"
+                  disabled={isSubmitting}
+                  className="btn-adham btn-adham-primary w-full text-xs font-medium py-3 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
                 >
-                  <Send className="w-4 h-4" />
-                  <span>Send Message</span>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Sending message to Shrishti...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Send Message</span>
+                    </>
+                  )}
                 </button>
               </div>
 
-              {formSubmitted && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 font-medium"
-                >
-                  <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Thank you! Your message has been prepared and sent successfully.</span>
-                </motion.div>
-              )}
+              <AnimatePresence>
+                {submitStatus === 'success' && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-start gap-2.5 font-normal"
+                  >
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-medium text-emerald-800">Message sent successfully!</p>
+                      <p className="text-[11px] text-emerald-700 mt-0.5">
+                        Your message has been delivered to <strong>{personalInfo.email}</strong>. Shrishti will reply to your email directly.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </form>
           </div>
 

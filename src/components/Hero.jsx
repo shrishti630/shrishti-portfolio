@@ -151,12 +151,12 @@ export default function Hero() {
       ref={heroSectionRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative pt-20 pb-8 sm:pt-24 sm:pb-10 overflow-hidden bg-transparent text-[#222222] select-none"
+      className="relative min-h-[100vh] flex flex-col justify-between pt-20 pb-4 sm:pt-24 sm:pb-6 overflow-hidden bg-[#fbfbfc] text-[#222222] select-none"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex-1 flex flex-col justify-between">
         
-        {/* Prominently Highlighted Name Showcase (Light, Thinner Typography + Seen together with Face UI) */}
-        <div className="text-center max-w-4xl mx-auto mb-3 sm:mb-5">
+        {/* Prominently Highlighted Name Showcase */}
+        <div className="text-center max-w-4xl mx-auto mb-2 sm:mb-4">
           
           {/* Identity Tag Badge */}
           <motion.div 
@@ -374,7 +374,7 @@ export default function Hero() {
               */}
               <div 
                 ref={faceContainerRef}
-                className="relative w-[280px] sm:w-[320px] md:w-[340px] lg:w-[350px] aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-950 cursor-ew-resize group"
+                className="relative w-[300px] sm:w-[350px] md:w-[380px] lg:w-[410px] xl:w-[420px] aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-950 cursor-ew-resize group"
                 onMouseDown={handleDragStart}
                 onTouchStart={handleDragStart}
               >
@@ -501,6 +501,20 @@ export default function Hero() {
             </div>
           </motion.div>
 
+        </div>
+
+        {/* Subtle Scroll Indicator at bottom of 100vh viewport */}
+        <div className="pt-2 pb-1 flex flex-col items-center justify-center gap-1 text-slate-400 select-none pointer-events-none">
+          <span className="text-[10px] font-mono tracking-widest uppercase text-slate-400">
+            Scroll to explore
+          </span>
+          <div className="w-4 h-7 rounded-full border border-slate-300 flex items-start justify-center p-1">
+            <motion.div 
+              animate={{ y: [0, 8, 0] }}
+              transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+              className="w-1 h-1 rounded-full bg-indigo-600"
+            />
+          </div>
         </div>
 
       </div>

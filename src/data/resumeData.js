@@ -2,7 +2,6 @@ export const personalInfo = {
   name: "Shrishti Pandey",
   title: "Product Designer & Front End Developer",
   tagline: "Product designer and front end developer with a passion for designing beautiful, accessible and functional user experiences.",
-  phone: "+91 8828026903",
   email: "shrishtip028@gmail.com",
   linkedin: "https://linkedin.com/in/shrishtipandey0611",
   github: "https://github.com/shrishti630",
