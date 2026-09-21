@@ -31,7 +31,7 @@ export default function Contact() {
     setSubmitStatus(null);
 
     try {
-      const response = await fetch("https://formsubmit.co/ajax/shrishtip028@gmail.com", {
+      const response = await fetch("https://formsubmit.co/ajax/338875fd50a50d7fe0bdccfae6826559", {
         method: "POST",
         headers: { 
           'Content-Type': 'application/json',
