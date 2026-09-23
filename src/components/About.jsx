@@ -156,8 +156,11 @@ export default function About() {
         {/* Action Button */}
         <div className="mt-12 text-center flex flex-wrap items-center justify-center gap-4">
           <a
-            href={`mailto:${personalInfo.email}?subject=Resume%20Request%20-%20Shrishti%20Pandey`}
+            href={personalInfo.resumeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="btn-adham btn-adham-primary text-xs"
+            title="Open Shrishti Pandey Resume (PDF)"
           >
             <Download className="w-4 h-4" />
             <span>Download Full Resume</span>

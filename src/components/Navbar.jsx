@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Menu, X, Mail, Check, Sparkles } from 'lucide-react';
+import { Download, Menu, X, Mail, Check } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './BrandIcons';
 import { personalInfo } from '../data/resumeData';
 
@@ -34,69 +34,66 @@ export default function Navbar({ onOpenAestheticModal }) {
 
   const handleNavClick = (e, path, sectionId) => {
     e.preventDefault();
+    setMobileMenuOpen(false);
+
     if (path === '/') {
       window.history.pushState(null, '', '/');
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      window.history.pushState(null, '', path);
-      const target = document.getElementById(sectionId);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
-      }
+      return;
     }
-    setMobileMenuOpen(false);
+
+    const element = document.getElementById(sectionId);
+    if (element) {
+      window.history.pushState(null, '', path);
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled 
-          ? 'bg-white/95 backdrop-blur-md border-b border-slate-200/80 py-3 shadow-xs' 
-          : 'bg-white/80 backdrop-blur-xs py-4'
+          ? 'bg-white/90 backdrop-blur-md border-b border-slate-200/80 py-3 shadow-xs' 
+          : 'bg-transparent py-4 sm:py-5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* SP Monogram Logo Only (no repeated name in header) */}
+          {/* Adham Dannaway Minimal Monogram SP (Clean route to /) */}
           <a 
             href="/" 
             onClick={(e) => handleNavClick(e, '/', 'hero')}
-            className="flex items-center text-slate-900 group"
-            title="Shrishti Pandey (SP)"
+            className="group flex items-center gap-2 text-slate-900 transition-colors"
           >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 p-[1.5px] shadow-xs group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
-                <span className="font-['Syne'] font-bold text-sm tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                  SP
-                </span>
-              </div>
+            <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm tracking-wider font-['Plus_Jakarta_Sans'] shadow-xs group-hover:bg-indigo-600 transition-colors">
+              SP
             </div>
           </a>
 
-          {/* Desktop Lowercase Navigation (Clean routes, light font) */}
-          <nav className="hidden md:flex items-center gap-7">
-            <ul className="flex items-center gap-7 list-none m-0 p-0">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-6">
+            <div className="flex items-center space-x-5">
               {navLinks.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.path}
-                    onClick={(e) => handleNavClick(e, link.path, link.sectionId)}
-                    className="text-sm font-normal text-slate-600 hover:text-slate-900 transition-colors lowercase tracking-wider hover:underline underline-offset-4 decoration-indigo-400"
-                  >
-                    {link.name}
-                  </a>
-                </li>
+                <a
+                  key={link.name}
+                  href={link.path}
+                  onClick={(e) => handleNavClick(e, link.path, link.sectionId)}
+                  className="text-xs font-normal text-slate-600 hover:text-indigo-600 transition-colors lowercase tracking-wider relative group"
+                >
+                  {link.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span>
+                </a>
               ))}
-            </ul>
+            </div>
 
-            {/* Social Icons Right Beside Nav */}
-            <div className="flex items-center gap-2 pl-4 border-l border-slate-200">
+            {/* Social & Contact Icons */}
+            <div className="flex items-center space-x-2 pl-4 border-l border-slate-200">
               <a
                 href={personalInfo.github}
                 target="_blank"
                 rel="noreferrer"
-                className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 rounded-lg transition-colors"
                 title="GitHub"
               >
                 <GithubIcon className="w-4 h-4" />
@@ -106,7 +103,7 @@ export default function Navbar({ onOpenAestheticModal }) {
                 href={personalInfo.linkedin}
                 target="_blank"
                 rel="noreferrer"
-                className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 rounded-lg transition-colors"
                 title="LinkedIn"
               >
                 <LinkedinIcon className="w-4 h-4" />
@@ -125,22 +122,14 @@ export default function Navbar({ onOpenAestheticModal }) {
               </button>
             </div>
 
-            {/* Design System & Resume Buttons */}
+            {/* Resume Button */}
             <div className="flex items-center gap-2">
-              {onOpenAestheticModal && (
-                <button
-                  onClick={onOpenAestheticModal}
-                  className="px-3 py-1.5 rounded-lg text-xs font-mono text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/80 transition-colors cursor-pointer flex items-center gap-1.5"
-                  title="View Design Tokens & Reference Sites"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Tokens</span>
-                </button>
-              )}
-
               <a
-                href={`mailto:${personalInfo.email}?subject=Resume%20Request%20-%20Shrishti%20Pandey`}
+                href={personalInfo.resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn-adham btn-adham-primary text-xs py-2 px-3.5"
+                title="Open Shrishti Pandey Resume (PDF)"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Resume</span>
@@ -210,8 +199,11 @@ export default function Navbar({ onOpenAestheticModal }) {
                 </div>
 
                 <a
-                  href={`mailto:${personalInfo.email}?subject=Resume%20Request%20-%20Shrishti%20Pandey`}
+                  href={personalInfo.resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="btn-adham btn-adham-primary text-xs py-2 px-3"
+                  title="Open Shrishti Pandey Resume (PDF)"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Resume</span>

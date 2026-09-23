@@ -7,6 +7,7 @@ export const personalInfo = {
   github: "https://github.com/shrishti630",
   location: "Mumbai, Maharashtra, India",
   status: "Available for Roles & Projects",
+  resumeUrl: "/Shrishti-Pandey.pdf",
   objective: "Product designer and front end developer with hands-on experience building responsive web applications using React.js, Tailwind CSS, JavaScript, and modern UI design systems. Experienced in developing reusable UI components, integrating APIs, and creating accessible user interfaces through internship and commercial projects."
 };
 
